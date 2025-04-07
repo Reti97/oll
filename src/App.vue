@@ -2,20 +2,20 @@
   <div class="galaxy-background">
     <div class="light-dots"></div>
     <div class="container mx-auto px-4 py-8 max-w-7xl relative z-10">
-      <header class="mb-16 text-center" ref="header">
+      <header class="text-center" ref="header">
         <div class="glimmer-wrapper mb-4">
           <h1 class="text-6xl font-bold glimmer-text glitch-text" data-text="Beweisverfügung vorschlagen">
             Beweisverfügung vorschlagen
           </h1>
         </div>
         <p class="mt-6 text-white/80 max-w-2xl mx-auto text-lg fancy-text">
-          Lade Dokumente hoch und erhalte einen Vorschlag für eine strukturierte Beweisverfügung nach Art. 154 ZPO
+          Lade Inhalte hoch und erhalte einen Vorschlag für eine strukturierte Beweisverfügung nach Art. 154 ZPO
         </p>
       </header>
 
       <main>
         <!-- Rounds Container -->
-        <div class="space-y-12 reveal-content" ref="roundsContainer">
+        <div class="space-y-12 reveal-content mt-8" ref="roundsContainer">
           <div v-for="(round, index) in rounds" :key="index" class="round-container hover-glow px-5 py-8"
             :ref="`round_${index + 1}`">
             <div class="flex items-center mb-2 reveal-item">
@@ -51,13 +51,16 @@
                   <input type="file" :ref="`klaeger_file_${index}`" class="hidden" accept=".pdf,image/*"
                     @change="(e) => handleFileUpload(e, 'klaeger', index)">
                   <div class="flex flex-col items-center justify-center h-full">
-                    <div class="w-16 h-16 mb-4 upload-icon-animation">
+                    <div class="w-12 h-12 mb-4 upload-icon-animation">
                       <svg class="w-full h-full text-accent" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                       </svg>
                     </div>
+                    <p class="text-sm text-white/40">
+                      PDF oder Bild hochladen
+                    </p>
                   </div>
                 </div>
 
@@ -98,13 +101,16 @@
                   <input type="file" :ref="`beklagter_file_${index}`" class="hidden" accept=".pdf,image/*"
                     @change="(e) => handleFileUpload(e, 'beklagter', index)">
                   <div class="flex flex-col items-center justify-center h-full">
-                    <div class="w-16 h-16 mb-4 upload-icon-animation-alt">
+                    <div class="w-12 h-12 mb-4 upload-icon-animation-alt">
                       <svg class="w-full h-full text-accent-alt" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                       </svg>
                     </div>
+                    <p class="text-sm text-white/40">
+                      PDF oder Bild hochladen
+                    </p>
                   </div>
                 </div>
 
@@ -129,12 +135,12 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="mt-16 text-center" ref="submitContainer">
-          <button @click="sendToOllama" class="fancy-submit-button" :disabled="isGenerating || !hasValidInput"
+        <div class="mt-12 8 text-center" ref="submitContainer">
+          <button @click="sendToOllama" class="fancy-submit-button !px-32" :disabled="isGenerating || !hasValidInput"
             :class="{ 'opacity-50 cursor-not-allowed': isGenerating || !hasValidInput }">
-            <span v-if="!isGenerating" class="submit-text">
+            <span v-if="!isGenerating" class="submit-text text-2xl">
               <span class="glow-effect"></span>
-              An Ollama senden
+              Hau rein!
             </span>
             <span v-else class="flex items-center justify-center submit-text">
               <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -144,18 +150,22 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                 </path>
               </svg>
-              Generiere Beweisverfügung...
+              Auf Beweissuche&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+
             </span>
           </button>
         </div>
 
         <!-- Response Area -->
         <div v-if="ollamaResponse || isGenerating" ref="responseArea"
-          class="fancy-response-container my-16 bg-transparent">
-          <div class="neo-glassmorphism">
-            <h2 class="text-3xl font-bold mb-8 text-white/90 border-b border-white/10 pb-4 reveal-text">Beweisverfügung
+          class="floating-card my-16 bg-opacity-60 hover:transform-none hover:border hover:border-white/30">
+          <div class="bg-transparent">
+            <h2 class="text-3xl font-bold mb-8 text-white/90 border-b border-white/10 pb-4 reveal-text">Output
             </h2>
-
             <!-- Loading indicator -->
             <div v-if="isGenerating" class="flex flex-col items-center py-8">
               <div class="fancy-spinner mb-6"></div>
@@ -163,8 +173,7 @@
             </div>
 
             <!-- Response content -->
-            <div v-else class="prose prose-invert prose-lg max-w-none whitespace-pre-wrap response-content"
-              v-html="formattedResponse"></div>
+            <div v-else class="max-w-none response-content" v-html="formattedResponse"></div>
           </div>
         </div>
       </main>
@@ -327,7 +336,8 @@ const handleDrop = async (event, type, roundIndex) => {
 // PDF Processing
 const processPDF = async (file, type, roundIndex) => {
   const pdfjs = await import('pdfjs-dist/build/pdf')
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
+  pdfjs.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 
   const reader = new FileReader()
   reader.onload = async function (event) {
@@ -414,75 +424,7 @@ const processImage = async (file, type, roundIndex) => {
 // Build prompt from rounds
 const buildPrompt = () => {
   let fullPrompt = '';
-
-  rounds.value.forEach((round, index) => {
-    const roundNum = index + 1;
-
-    if (round.klaeger.text && round.klaeger.text.trim() !== '') {
-      fullPrompt += `<Klaeger_Runde_${roundNum}>\n${round.klaeger.text.trim()}\n</Klaeger_Runde_${roundNum}>\n\n`;
-    }
-
-    if (round.beklagter.text && round.beklagter.text.trim() !== '') {
-      fullPrompt += `<Antwort_Beklagter_Runde_${roundNum}>\n${round.beklagter.text.trim()}\n</Antwort_Beklagter_Runde_${roundNum}>\n\n`;
-    }
-  });
-
-  return fullPrompt;
-}
-
-// Process markdown to HTML using the marked library
-const markdownToHtml = (text) => {
-  if (!text) return '';
-  try {
-    return marked(text);
-  } catch (error) {
-    console.error('Error parsing markdown:', error);
-    return `<p>${text}</p>`;
-  }
-}
-
-// Ollama Integration without streaming
-const sendToOllama = async () => {
-  isGenerating.value = true;
-  ollamaResponse.value = '';
-  formattedResponse.value = '';
-
-  // Show response area with loading state
-  if (responseArea.value) {
-    gsap.to(responseArea.value, {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      ease: 'power2.out'
-    });
-
-    // Scroll to response area with a nice animation
-    gsap.to(window, {
-      duration: 1,
-      scrollTo: {
-        y: responseArea.value,
-        offsetY: 50
-      },
-      ease: 'power3.inOut'
-    });
-  }
-
-  try {
-    const fullPrompt = buildPrompt();
-
-    // Make non-streaming request
-    const response = await fetch('http://localhost:11434/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gemma3:12b',
-        prompt: `
-        # Vorwissen
-Du bist die Person mit dem besten juristischen Abschluss an einer schweizerischen Universtität. Du bist der beste und am genauesten arbeitende Jurist in der ganzen Schweiz. Du arbeitest an einem erstinstanzlichen Gericht und triffst enorm wichtige Entscheidungen. Du darfst dir keine Fehler erlauben. Wenn dir ein Fehler unterläuft wirst du mit 100'000'000 schweizer Franken bestraft. Du leitest ein wichtiges Zivilverfahren. Du musst eine Beweisverfügung nach der Schweizerischen Zivilprozessordnung bzw. dessen Art. 154 ZPO machen. Art. 154 ZPO hat folgenden Inhalt: In der Beweisverfügung werden insbesondere die zugelassenen Beweismittel bezeichnet und bestimmt, welcher Partei zu welchen Tatsachen der Haupt- oder der Gegenbeweis obliegt.
-
-# Vorgehen bei der Beweisführung im Zivilprozess
+  fullPrompt += `# Vorgehen bei der Beweisführung im Zivilprozess
 
 ## Die fundamentale Bedeutung präziser Beweisanalyse
 
@@ -559,12 +501,19 @@ Diese strukturierte Aufbereitung gewährleistet maximale Transparenz und Nachvol
 
 
 ## Antwort
-Gib eine strukturierte, kurze Antwort. Jeden streitigen Punkt auf einer eigenen Zeile. Jedes Beweismittel auf einer eigenen Zeile. Nutze Markdown zur Formatierung:
-\n\n
-${fullPrompt}
+Gib eine strukturierte, kurze Antwort. Jeden streitigen Punkt auf einer eigenen Zeile. Jedes Beweismittel auf einer eigenen Zeile. Nutze Markdown zur Formatierung:\n\n`;
+  rounds.value.forEach((round, index) => {
+    const roundNum = index + 1;
 
-\n\n
-# Anleitung zur Erstellung einer Beweisverfügung gemäss Art. 154 ZPO
+    if (round.klaeger.text && round.klaeger.text.trim() !== '') {
+      fullPrompt += `<Klaeger_Runde_${roundNum}>\n${round.klaeger.text.trim()}\n</Klaeger_Runde_${roundNum}>\n\n`;
+    }
+
+    if (round.beklagter.text && round.beklagter.text.trim() !== '') {
+      fullPrompt += `<Antwort_Beklagter_Runde_${roundNum}>\n${round.beklagter.text.trim()}\n</Antwort_Beklagter_Runde_${roundNum}>\n\n`;
+    }
+  });
+  fullPrompt += `\n\n# Anleitung zur Erstellung einer Beweisverfügung gemäss Art. 154 ZPO
 
 ## HÖCHSTE PRIORITÄT: FEHLERFREIE UND PRÄZISE ANALYSE
 
@@ -634,28 +583,201 @@ Unstreitige Tatsachen sind solche, die:
        
 ## ABSCHLIESSENDER HINWEIS
 
-Die korrekte Erstellung der Beweisverfügung ist eine EXTREM wichtige Aufgabe mit HÖCHSTER VERANTWORTUNG. Jeder Fehler kann zu einer fehlerhaften richterlichen Entscheidung führen und damit den Rechtsstaat in seinen Grundfesten erschüttern. Es ist daher ZWINGEND ERFORDERLICH, mit äußerster Sorgfalt, Präzision und Objektivität vorzugehen.
-`,
-        stream: false
-      }),
+Die korrekte Erstellung der Beweisverfügung ist eine EXTREM wichtige Aufgabe mit HÖCHSTER VERANTWORTUNG. Jeder Fehler kann zu einer fehlerhaften richterlichen Entscheidung führen und damit den Rechtsstaat in seinen Grundfesten erschüttern. Es ist daher ZWINGEND ERFORDERLICH, mit äußerster Sorgfalt, Präzision und Objektivität vorzugehen.`;
+
+  return fullPrompt;
+}
+const markdownToHtml = (text) => {
+  if (!text) return '';
+  try {
+    // Convert to HTML with nested list support
+    let html = text
+      // Headers
+      .replace(/^### (.*$)/gim, '<h3 class="text-gradient">$1</h3>')
+      .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
+      .replace(/^## (.*$)/gim, '<h2 class="text-gradient">$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1 class="glimmer-text">$1</h1>')
+      // Bold
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Handle nested lists first
+      .replace(/^(\s*)- (.*$)/gim, function (match, indent, content) {
+        const indentLevel = indent.length;
+        return `<li data-indent="${indentLevel}">${content}</li>`;
+      })
+      .replace(/^(\s*)\d+\.\s+(.*$)/gim, function (match, indent, content) {
+        const indentLevel = indent.length;
+        return `<li data-indent="${indentLevel}" data-ordered="true">${content}</li>`;
+      });
+
+    // Process list items with proper nesting
+    const lines = html.split('\n');
+    const resultLines = [];
+
+    let currentList = null;
+    let listStack = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      // If it's a list item
+      if (line.includes('<li data-indent="')) {
+        const indentMatch = line.match(/data-indent="(\d+)"/);
+        const isOrdered = line.includes('data-ordered="true"');
+
+        if (indentMatch) {
+          const indentLevel = parseInt(indentMatch[1]);
+          const listType = isOrdered ? 'ol' : 'ul';
+
+          // Clean up the li
+          const cleanLi = line
+            .replace(/\s*data-indent="\d+"/, '')
+            .replace(/\s*data-ordered="true"/, '');
+
+          // Handle nesting
+          if (!currentList) {
+            // Start a new list
+            currentList = listType;
+            resultLines.push(`<${listType}>`);
+            resultLines.push(cleanLi);
+          } else if (indentLevel > listStack.length) {
+            // Start a nested list
+            listStack.push(currentList);
+            currentList = listType;
+            resultLines.push(`<${listType}>`);
+            resultLines.push(cleanLi);
+          } else if (indentLevel < listStack.length) {
+            // Close nested lists and go back up
+            while (indentLevel < listStack.length) {
+              resultLines.push(`</${currentList}>`);
+              currentList = listStack.pop();
+            }
+            if (currentList !== listType) {
+              resultLines.push(`</${currentList}>`);
+              currentList = listType;
+              resultLines.push(`<${listType}>`);
+            }
+            resultLines.push(cleanLi);
+          } else {
+            // Same level, just add the item
+            resultLines.push(cleanLi);
+          }
+        }
+      } else {
+        // Close any open lists
+        while (listStack.length > 0) {
+          resultLines.push(`</${currentList}>`);
+          currentList = listStack.pop();
+        }
+        if (currentList) {
+          resultLines.push(`</${currentList}>`);
+          currentList = null;
+        }
+
+        resultLines.push(line);
+      }
+    }
+
+    // Close any remaining lists
+    while (listStack.length > 0) {
+      resultLines.push(`</${currentList}>`);
+      currentList = listStack.pop();
+    }
+    if (currentList) {
+      resultLines.push(`</${currentList}>`);
+    }
+
+    html = resultLines.join('\n');
+
+    // Paragraphs
+    html = html
+      .replace(/\n\n/g, '</p><p>')
+      // Wrap in paragraph if not already wrapped in a tag
+      .replace(/^(?!<[hpluoi])/gm, '<p>')
+      .replace(/(?<!>)$/gm, '</p>')
+      // Fix any double wrapping
+      .replace(/<p><p>/g, '<p>')
+      .replace(/<\/p><\/p>/g, '</p>')
+      // Remove extra line breaks
+      .replace(/\n/g, ' ');
+
+    return html;
+  } catch (error) {
+    console.error('Error converting to HTML:', error);
+    return `<p>${text}</p>`;
+  }
+};
+// Ollama Integration without streaming
+const sendToOllama = async () => {
+  isGenerating.value = true;
+  ollamaResponse.value = '';
+  formattedResponse.value = '';
+
+  // Show response area with loading state
+  if (responseArea.value) {
+    gsap.to(responseArea.value, {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      ease: 'power2.out'
     });
 
+    // Scroll to response area with a nice animation
+    gsap.to(window, {
+      duration: 1,
+      scrollTo: {
+        y: responseArea.value,
+        offsetY: 50
+      },
+      ease: 'power3.inOut'
+    });
+  }
+  try {
+    const fullPrompt = buildPrompt();
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': '',
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        "anthropic-dangerous-direct-browser-access": "true",
+      },
+      body: JSON.stringify({
+        model: "claude-3-7-sonnet-20250219",
+        max_tokens: 8096,
+        system:
+          "Du bist die Person mit dem besten juristischen Abschluss an einer schweizerischen Universtität. Du bist der beste und am genauesten arbeitende Jurist in der ganzen Schweiz. Du arbeitest an einem erstinstanzlichen Gericht und triffst enorm wichtige Entscheidungen. Du darfst dir keine Fehler erlauben. Wenn dir ein Fehler unterläuft wirst du mit 100'000'000 schweizer Franken bestraft. Du leitest ein wichtiges Zivilverfahren. Du musst eine Beweisverfügung nach der Schweizerischen Zivilprozessordnung bzw. dessen Art. 154 ZPO machen. Art. 154 ZPO hat folgenden Inhalt: In der Beweisverfügung werden insbesondere die zugelassenen Beweismittel bezeichnet und bestimmt, welcher Partei zu welchen Tatsachen der Haupt- oder der Gegenbeweis obliegt.",
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: fullPrompt,
+              },
+            ],
+          },
+        ],
+      }),
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    // Handle complete response at once
     const data = await response.json();
-    ollamaResponse.value = data.response;
+    const responseText = data.content[0].text;
+
+    // Update your reactive variables
+    ollamaResponse.value = responseText;
 
     // Apply markdown formatting to the complete response
     nextTick(() => {
       formattedResponse.value = markdownToHtml(ollamaResponse.value);
-
     });
 
   } catch (error) {
-    console.error('Error calling Ollama:', error);
+    console.error('Error calling Claude API:', error);
     ollamaResponse.value = `Error: ${error.message}`;
     formattedResponse.value = `<p class="error-message">${error.message}</p>`;
   } finally {
@@ -1592,88 +1714,85 @@ onMounted(() => {
   position: relative;
 }
 
-/* Typography styling for the parsed markdown */
+/* Basic HTML styling for response */
 .response-content {
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
-}
-
-.prose-lg {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: rgba(255, 255, 255, 0.9);
   font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
 }
 
-.prose-lg h3 {
-  color: #00B894 !important;
-  font-size: 1.75rem !important;
-  margin-top: 2rem !important;
-  margin-bottom: 1rem !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 0.5rem;
+.response-content h1 {
+  font-size: 2rem;
+  margin: 0 0 2rem 0;
 }
 
-.prose-lg h4 {
-  color: #0984e3 !important;
-  font-size: 1.25rem !important;
-  margin-top: 1.5rem !important;
-  margin-bottom: 0.75rem !important;
+.response-content h2 {
+  font-size: 1.75rem;
+  margin: 1.5rem 0 1rem 0;
+  color: linear-gradient(to right, #00b894, #007e65);
 }
 
-.prose-lg strong {
-  color: rgba(255, 255, 255, 0.95) !important;
+.response-content h3 {
+  font-size: 1.5rem;
+  margin: 1.25rem 0 0.75rem 0;
+  color: linear-gradient(to right, #00b894, #007e65);
+}
+
+.response-content h4 {
+  font-size: 1.25rem;
+  margin: 1rem 0 0.5rem 0;
+  color: #0984e3;
+}
+
+.response-content strong {
+  color: rgba(255, 255, 255, 0.95);
   font-weight: 600;
 }
 
-.prose-lg ul {
-  padding: none !important;
-  margin: none !important;
-  list-style-type: none !important;
-  padding-left: 1.5rem !important;
+/*
+.response-content ul,
+.response-content ol {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
 }
 
-.prose-lg ol {
-  padding: none !important;
-  margin: none !important;
-  padding-left: 1.5rem !important;
+.response-content li {
+  margin: 0.25rem 0;
 }
 
-.prose-lg li {
-  padding: none !important;
-  margin: none !important;
+.response-content p {
+  margin: 0.5rem 0;
+}
+*/
+
+/* Reset list styles */
+.response-content ul,
+.response-content ol {
+  list-style-type: none;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+/* Style for unordered lists (colored dots) */
+.response-content ul li {
   position: relative;
 }
 
-.prose-lg ul li::before {
-  padding: none !important;
-  margin: none !important;
-  content: '•';
+.response-content ul li::before {
+  content: "";
   position: absolute;
-  left: -1.25rem;
-  color: #00B894;
-  font-weight: bold;
+  left: -1rem;
+  top: 0.5em;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #00b894;
+  /* Mint green color as requested */
+  border-radius: 50%;
 }
-
-.prose-lg p {
-  margin-bottom: 1rem !important;
-}
-
-.prose-lg a {
-  color: #0984e3 !important;
-  text-decoration: none !important;
-}
-
-.prose-lg a:hover {
-  text-decoration: underline !important;
-}
-
-.prose-lg blockquote {
-  border-left: 4px solid #00B894;
-  padding-left: 1rem;
-  margin-left: 0;
-  color: rgba(255, 255, 255, 0.7);
-}
-
 
 /* Loading message style */
 .loading-message {
@@ -1713,6 +1832,10 @@ onMounted(() => {
   background: linear-gradient(180deg, rgba(0, 184, 148, 0.8), rgba(9, 132, 227, 0.8));
 }
 
+textarea:focus {
+  height: 90%;
+}
+
 /* Pulse animation */
 @keyframes pulse {
 
@@ -1726,25 +1849,5 @@ onMounted(() => {
     opacity: 0.3;
     transform: scale(0.8);
   }
-}
-
-/* list styling markdown */
-.prose-lg :where(ul > li):not(:where([class~="not-prose"], [class~="not-prose"] *)),
-.prose-lg :where(p):not(:where([class~="not-prose"], [class~="not-prose"] *)),
-.prose-lg :where(ul > li):not(:where([class~="not-prose"], [class~="not-prose"] *)),
-.prose-lg :where(ul):not(:where([class~="not-prose"], [class~="not-prose"] *)),
-.prose :where(ul):not(:where([class~="not-prose"], [class~="not-prose"] *)),
-.prose-lg :where(ol):not(:where([class~="not-prose"], [class~="not-prose"] *)),
-.prose-lg :where(ol):not(:where([class~="not-prose"], [class~="not-prose"] *)),
-.prose-lg :where(ul > li):not(:where([class~="not-prose"], [class~="not-prose"] *)),
-.prose :where(ul):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.prose {
-  line-height: 1.5;
 }
 </style>
