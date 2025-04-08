@@ -1,6 +1,6 @@
-# oll - Beweisverfügung vorschlagen
+# Open Legal Lab 2025 - Beweisverfügung vorschlagen
 
-There you go. In diesem Repo findest du:
+There you go. Unser Projekt vom Open Legal Lab 2025. In diesem Repo findest du:
 - Ein unnötig Fancy User Interface
 - Ein Prompt, um (hoffentlich) eine gute Beweisverfügung aus Klageschriften und deren Antwort zu erhalten
 - Code, bei dem ich gerne behaupten würde ich hätte mich ausgiebiger am Kühlschrank der Coop Rechtsschutz [Coop Rechtsschutz](https://crs-innovation.ch/) bedient (Cheers 🍻).
